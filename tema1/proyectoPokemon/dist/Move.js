@@ -11,7 +11,7 @@ class Move {
     setMove(movName) {
         this.movName = movName;
     }
-    getDamageName() {
+    getDamage() {
         return this.damageMov;
     }
     setDamage(damageMov) {

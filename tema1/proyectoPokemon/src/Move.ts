@@ -15,7 +15,7 @@ class Move {
         this.movName = movName;
     }
 
-    public getDamageName() : number {
+    public getDamage() : number {
         return this.damageMov;
     }
 
