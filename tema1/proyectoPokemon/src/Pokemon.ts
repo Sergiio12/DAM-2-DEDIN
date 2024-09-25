@@ -69,7 +69,7 @@ class Pokemon {
 
     public atacar(victima: Pokemon, miTurno : boolean) : void { 
         if(victima === undefined) {
-
+            console.log("Objeto victima no creado?");
         } else {
             let damage: number;
             let movimiento : Move;
@@ -84,16 +84,18 @@ class Pokemon {
                     victima.setHpActual(0);
                 }
                 console.log(`${this.getNombre()} ha infligido un daño de ${damage}HP a ${victima.getNombre()}.`);
+                console.log();
             } else { //Si no es mi turno:
                 console.log("La IA esta atacando realizando ataque...");
-                movimiento = this.escogerMovimientoAleatorio();
                 console.log();
+                movimiento = this.escogerMovimientoAleatorio();
                 damage = (this.getAtaque() / victima.getDefensa()) * movimiento.getDamage() * (1 - factorAleatorio);
                 victima.setHpActual(victima.getHpActual() - damage);
                 if(victima.getHpActual() < 0) {
                     victima.setHpActual(0);
                 }
                 console.log(`${this.getNombre()} ha infligido un daño de ${damage}HP a ${victima.getNombre()}.`);
+                console.log();
             }
         }
     }
@@ -122,6 +124,7 @@ class Pokemon {
 
             if (!isNaN(numParsed) && numParsed >= 1 && numParsed <= this.lMovimientos.length) {
                 numeroValido = numParsed; 
+                console.log();
             } else {
                 console.log("Introduce una respuesta valida.");
             }
