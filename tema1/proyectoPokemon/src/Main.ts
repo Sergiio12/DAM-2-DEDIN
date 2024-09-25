@@ -6,8 +6,8 @@ import * as readlineSync from 'readline-sync';
 
 
 let lPokemons: Pokemon[] = [];
-let pokemonElegido: Pokemon;
-let pokemonRivalInicial: Pokemon;
+let miPokemon: Pokemon;
+let pokemonRival: Pokemon;
 
 
 //                                       DECLARACION DE METODOS
@@ -148,7 +148,7 @@ function generarRivalAleatorio(lPokemons: Pokemon[]) : Pokemon {
     return pokemonRival;
 }
 
-function preguntarContinuacion(): string {
+/*function preguntarContinuacion(): string {
     let resp : string;
     let respValido: boolean = false;
     resp = readlineSync.question("¿Quieres continuar combatiendo con otros Pokémon? (SI/NO): ");
@@ -165,19 +165,18 @@ function preguntarContinuacion(): string {
 
 function finalizarCombate(respUsuario: string): boolean {
     return respUsuario.toLowerCase() === "si";
-}
+}*/
 
-function preguntarAccion() {
+function preguntarAccion() : number {
     let accion : string;
     let respValida : boolean = false;
-    let numeroParseado : number;
+    let numeroParseado : number = 2; //Inicializamos para que ataque por defecto.
     while(!respValida) {
         console.log();
         console.log("Acciones disponibles:");
         console.log("1. Atacar.");
         console.log("2. Curarme.");
-        console.log();
-        accion = readlineSync.question("Elige accion:");
+        accion = readlineSync.question("Elige accion: ");
         numeroParseado = parseInt(accion);
 
         if(!isNaN(numeroParseado) || numeroParseado === 1 || numeroParseado === 2) {
@@ -185,20 +184,79 @@ function preguntarAccion() {
         } else {
             console.log("Error: Se espera que introduzcas un valor numerico (1 o 2).");
         }
+    }
 
+    return numeroParseado;
+}
+
+function realizarAccion(accion : number, ejecutor : Pokemon, victima : Pokemon, miTurno : boolean) : void {
+    let accionValida : boolean = true;
+    switch(accion) {
+        case 1: //Atacar.
+            ejecutor.atacar(victima, miTurno);
+            break;
+        case 2: //Curarse.
+            ejecutor.setHpActual((ejecutor.getHpActual()) + (ejecutor.getHpMax() / 2));
+            console.log("Tu vida se ha restablecido a: " + ejecutor.getHpActual() + "HP.");
     }
 }
 
-function realizarAccion(accion : number) {
-
+function generarInformeAtaqueIA(rival : Pokemon, miPokemon : Pokemon) {
+    
 }
 
 function iniciarCombate(miPokemon : Pokemon, pokemonRival : Pokemon) {
-    let turno : number = 0;
-    let seguirCombatiendo : boolean = true;
-    while(miPokemon.getHpActual() > 0 && seguirCombatiendo) {
+    let accion : number;
+    let miTurno : boolean = true;
+    let yaCurado : boolean = false;
+    while(miPokemon.getHpActual() > 0 && pokemonRival.getHpActual() > 0) {
+        //MI TURNO
+        miTurno = true;
+        console.log();
+        console.log("TU TURNO:");
+        console.log();
+        accion = preguntarAccion();
+        if(accion === 2 && miPokemon.getHpActual() === miPokemon.getHpMax()) {
+            console.log("No puedes curarte ahora porque tienes la vida a tope. Se te ha forzado a atacar.");
+            realizarAccion(1, miPokemon, pokemonRival, miTurno);
+        } else {
+            if(yaCurado) {
+                console.log("Se te ha obligado a atacar porque ya te has curado antes.");
+                realizarAccion(1, miPokemon, pokemonRival, miTurno);
+            } else {
+                realizarAccion(accion, miPokemon, pokemonRival, miTurno);
+                yaCurado = true;
+            }
+        }
 
+        //TURNO DE LA IA
+        miTurno = false;
+        console.log();
+        console.log("TURNO DE LA IA:");
+        console.log();
+        if(pokemonRival.getHpActual() === pokemonRival.getHpMax()) {
+            realizarAccion(1, pokemonRival, miPokemon, miTurno) //Forzamos a que solo pueda atacar, porque si tiene la vida llena, no podra curarse.
+        } else {   
+            if(yaCurado) {
+                console.log("La IA ha sido forzada a atacar porque ya se curado con anterioridad.");
+                realizarAccion(1, pokemonRival, miPokemon, miTurno);
+            } else {
+                accion = Math.floor(Math.random() * 2) + 1;
+                realizarAccion(accion, pokemonRival, miPokemon, miTurno);
+                yaCurado = true;
+            }
+        }
     }
+
+    console.log("El combate ha finalizado.");
+    if(miPokemon.getHpActual() === 0) {
+        console.log("Ganador: " + pokemonRival.getNombre());
+        console.log("Perdedor: " + miPokemon.getNombre());
+    } else {
+        console.log("Ganador: " + miPokemon.getNombre());
+        console.log("Perdedor: " + pokemonRival.getNombre());
+    }
+
 }
 
 
@@ -208,6 +266,8 @@ function iniciarCombate(miPokemon : Pokemon, pokemonRival : Pokemon) {
 //Generamos pokemons:
 lPokemons = generarPokemons();
 //Preguntamos cual queremos usar:
-pokemonElegido = preguntarPokemon(lPokemons);
-mostrarDatosPokemonElegido(pokemonElegido);
-pokemonRivalInicial = generarRivalAleatorio(lPokemons);
+miPokemon = preguntarPokemon(lPokemons);
+mostrarDatosPokemonElegido(miPokemon);
+pokemonRival = generarRivalAleatorio(lPokemons);
+//El combate comienza:
+iniciarCombate(miPokemon, pokemonRival);

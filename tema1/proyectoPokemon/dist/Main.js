@@ -29,7 +29,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Move_1 = __importDefault(require("./Move"));
 const Pokemon_1 = __importDefault(require("./Pokemon"));
 const readlineSync = __importStar(require("readline-sync"));
+//                                       DECLARACION DE VARIABLES.
 let lPokemons = [];
+let miPokemon;
+let pokemonRival;
+//                                       DECLARACION DE METODOS
 function generarPokemons() {
     let movimientos = [];
     let lPokemons = [];
@@ -141,13 +145,118 @@ function generarRivalAleatorio(lPokemons) {
     console.log();
     return pokemonRival;
 }
-function iniciarCombate(miPokemon, pokemonRival) {
+/*function preguntarContinuacion(): string {
+    let resp : string;
+    let respValido: boolean = false;
+    resp = readlineSync.question("¿Quieres continuar combatiendo con otros Pokémon? (SI/NO): ");
+    while (!respValido) {
+        resp = readlineSync.question("¿Quieres continuar combatiendo con otros Pokémon? (SI/NO): ");
+        if (resp.toLowerCase() === "si" || resp.toLowerCase() === "no") {
+            respValido = true;
+        } else {
+            console.log("Responde con 'SI' o 'NO'.");
+        }
+    }
+    return resp;
 }
+
+function finalizarCombate(respUsuario: string): boolean {
+    return respUsuario.toLowerCase() === "si";
+}*/
+function preguntarAccion() {
+    let accion;
+    let respValida = false;
+    let numeroParseado = 2; //Inicializamos para que ataque por defecto.
+    while (!respValida) {
+        console.log();
+        console.log("Acciones disponibles:");
+        console.log("1. Atacar.");
+        console.log("2. Curarme.");
+        accion = readlineSync.question("Elige accion: ");
+        numeroParseado = parseInt(accion);
+        if (!isNaN(numeroParseado) || numeroParseado === 1 || numeroParseado === 2) {
+            respValida = true;
+        }
+        else {
+            console.log("Error: Se espera que introduzcas un valor numerico (1 o 2).");
+        }
+    }
+    return numeroParseado;
+}
+function realizarAccion(accion, ejecutor, victima, miTurno) {
+    let accionValida = true;
+    switch (accion) {
+        case 1: //Atacar.
+            ejecutor.atacar(victima, miTurno);
+            break;
+        case 2: //Curarse.
+            ejecutor.setHpActual((ejecutor.getHpActual()) + (ejecutor.getHpMax() / 2));
+            console.log("Tu vida se ha restablecido a: " + ejecutor.getHpActual() + "HP.");
+    }
+}
+function generarInformeAtaqueIA(rival, miPokemon) {
+}
+function iniciarCombate(miPokemon, pokemonRival) {
+    let accion;
+    let miTurno = true;
+    let yaCurado = false;
+    while (miPokemon.getHpActual() > 0 && pokemonRival.getHpActual() > 0) {
+        //MI TURNO
+        miTurno = true;
+        console.log();
+        console.log("TU TURNO:");
+        console.log();
+        accion = preguntarAccion();
+        if (accion === 2 && miPokemon.getHpActual() === miPokemon.getHpMax()) {
+            console.log("No puedes curarte ahora porque tienes la vida a tope. Se te ha forzado a atacar.");
+            realizarAccion(1, miPokemon, pokemonRival, miTurno);
+        }
+        else {
+            if (yaCurado) {
+                console.log("Se te ha obligado a atacar porque ya te has curado antes.");
+                realizarAccion(1, miPokemon, pokemonRival, miTurno);
+            }
+            else {
+                realizarAccion(accion, miPokemon, pokemonRival, miTurno);
+                yaCurado = true;
+            }
+        }
+        //TURNO DE LA IA
+        miTurno = false;
+        console.log();
+        console.log("TURNO DE LA IA:");
+        console.log();
+        if (pokemonRival.getHpActual() === pokemonRival.getHpMax()) {
+            realizarAccion(1, pokemonRival, miPokemon, miTurno); //Forzamos a que solo pueda atacar, porque si tiene la vida llena, no podra curarse.
+        }
+        else {
+            if (yaCurado) {
+                console.log("La IA ha sido forzada a atacar porque ya se curado con anterioridad.");
+                realizarAccion(1, pokemonRival, miPokemon, miTurno);
+            }
+            else {
+                accion = Math.floor(Math.random() * 2) + 1;
+                realizarAccion(accion, pokemonRival, miPokemon, miTurno);
+                yaCurado = true;
+            }
+        }
+    }
+    console.log("El combate ha finalizado.");
+    if (miPokemon.getHpActual() === 0) {
+        console.log("Ganador: " + pokemonRival.getNombre());
+        console.log("Perdedor: " + miPokemon.getNombre());
+    }
+    else {
+        console.log("Ganador: " + miPokemon.getNombre());
+        console.log("Perdedor: " + pokemonRival.getNombre());
+    }
+}
+//                                       LLAMADA A LOS METODOS
 //Generamos pokemons:
 lPokemons = generarPokemons();
 //Preguntamos cual queremos usar:
-let pokemonElegido;
-let pokemonRivalInicial;
-pokemonElegido = preguntarPokemon(lPokemons);
-mostrarDatosPokemonElegido(pokemonElegido);
-pokemonRivalInicial = generarRivalAleatorio(lPokemons);
+miPokemon = preguntarPokemon(lPokemons);
+mostrarDatosPokemonElegido(miPokemon);
+pokemonRival = generarRivalAleatorio(lPokemons);
+//El combate comienza:
+iniciarCombate(miPokemon, pokemonRival);

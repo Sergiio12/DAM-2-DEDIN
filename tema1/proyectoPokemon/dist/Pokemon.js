@@ -70,24 +70,41 @@ class Pokemon {
     setNombre(nombre) {
         this.nombre = nombre;
     }
-    atacar(victima) {
-        let factorAleatorio = (Math.random() * 0.15);
-        let movimiento;
-        let damage;
-        if (victima !== undefined) {
-            console.log("Preparandote para atacar...");
-            movimiento = this.preguntarMovimiento();
-            damage = (this.getAtaque() / victima.getDefensa()) * movimiento.getDamage() * (1 - factorAleatorio);
-            victima.setHpActual(victima.getHpActual() - damage);
-            if (victima.getHpActual() < 0) {
-                victima.setHpActual(0);
-                console.log("Victima fulminada.");
-            }
-            console.log(`Has infligido un daño de ${damage}HP a tu victima.`);
+    atacar(victima, miTurno) {
+        if (victima === undefined) {
         }
         else {
-            console.log("No se ha inicializado ese objeto?");
+            let damage;
+            let movimiento;
+            let factorAleatorio = (Math.random() * 0.15);
+            if (miTurno) { //Si es mi turno:
+                console.log("Preparandote para atacar...");
+                console.log();
+                movimiento = this.preguntarMovimiento();
+                damage = (this.getAtaque() / victima.getDefensa()) * movimiento.getDamage() * (1 - factorAleatorio);
+                victima.setHpActual(victima.getHpActual() - damage);
+                if (victima.getHpActual() < 0) {
+                    victima.setHpActual(0);
+                }
+                console.log(`${this.getNombre()} ha infligido un daño de ${damage}HP a ${victima.getNombre()}.`);
+            }
+            else { //Si no es mi turno:
+                console.log("La IA esta atacando realizando ataque...");
+                movimiento = this.escogerMovimientoAleatorio();
+                console.log();
+                damage = (this.getAtaque() / victima.getDefensa()) * movimiento.getDamage() * (1 - factorAleatorio);
+                victima.setHpActual(victima.getHpActual() - damage);
+                if (victima.getHpActual() < 0) {
+                    victima.setHpActual(0);
+                }
+                console.log(`${this.getNombre()} ha infligido un daño de ${damage}HP a ${victima.getNombre()}.`);
+            }
         }
+    }
+    escogerMovimientoAleatorio() {
+        let indiceAleatorio = Math.floor(Math.random() * this.lMovimientos.length);
+        console.log("La IA ha escogido el movimiento: " + this.lMovimientos[indiceAleatorio].getMovName());
+        return this.lMovimientos[indiceAleatorio];
     }
     preguntarMovimiento() {
         let contador = 1;
@@ -98,6 +115,7 @@ class Pokemon {
         });
         let numero;
         let numeroValido = undefined;
+        console.log();
         while (numeroValido === undefined) {
             numero = readlineSync.question("Escoge tipo de ataque (numero): ");
             const numParsed = parseInt(numero);
@@ -109,7 +127,7 @@ class Pokemon {
             }
         }
         const ataqueSeleccionado = this.lMovimientos[numeroValido - 1];
-        console.log(`Has seleccionado: ${ataqueSeleccionado.getMovName()} con un ataque de ${ataqueSeleccionado.getDamage()}.`);
+        console.log(`Has seleccionado ${ataqueSeleccionado.getMovName()} con un ataque de ${ataqueSeleccionado.getDamage()}.`);
         return ataqueSeleccionado;
     }
 }

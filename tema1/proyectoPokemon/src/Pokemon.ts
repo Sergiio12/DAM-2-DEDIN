@@ -67,51 +67,70 @@ class Pokemon {
         this.nombre = nombre;
     }
 
-    public atacar(victima: Pokemon) : void {
-        let factorAleatorio = (Math.random() * 0.15);
-        let movimiento : Move; 
-        let damage: number;
-        if(victima !== undefined) {
-            console.log("Preparandote para atacar...");
-            movimiento = this.preguntarMovimiento();
-            damage = (this.getAtaque() / victima.getDefensa()) * movimiento.getDamage() * (1 - factorAleatorio);   
-            victima.setHpActual(victima.getHpActual() - damage);
-            if(victima.getHpActual() < 0) {
-                victima.setHpActual(0);
-                console.log("Victima fulminada.");
-            }
-            console.log(`Has infligido un daño de ${damage}HP a tu victima.`);
+    public atacar(victima: Pokemon, miTurno : boolean) : void { 
+        if(victima === undefined) {
+
         } else {
-            console.log("No se ha inicializado ese objeto?");
+            let damage: number;
+            let movimiento : Move;
+            let factorAleatorio = (Math.random() * 0.15);
+            if(miTurno) { //Si es mi turno:
+                console.log("Preparandote para atacar...");
+                console.log();
+                movimiento = this.preguntarMovimiento();
+                damage = (this.getAtaque() / victima.getDefensa()) * movimiento.getDamage() * (1 - factorAleatorio);   
+                victima.setHpActual(victima.getHpActual() - damage);
+                if(victima.getHpActual() < 0) {
+                    victima.setHpActual(0);
+                }
+                console.log(`${this.getNombre()} ha infligido un daño de ${damage}HP a ${victima.getNombre()}.`);
+            } else { //Si no es mi turno:
+                console.log("La IA esta atacando realizando ataque...");
+                movimiento = this.escogerMovimientoAleatorio();
+                console.log();
+                damage = (this.getAtaque() / victima.getDefensa()) * movimiento.getDamage() * (1 - factorAleatorio);
+                victima.setHpActual(victima.getHpActual() - damage);
+                if(victima.getHpActual() < 0) {
+                    victima.setHpActual(0);
+                }
+                console.log(`${this.getNombre()} ha infligido un daño de ${damage}HP a ${victima.getNombre()}.`);
+            }
         }
     }
 
-        private preguntarMovimiento(): Move {
-            let contador: number = 1;
-            console.log("Ataques disponibles:");
-            this.lMovimientos.forEach(tipoAtaque => {
-                console.log(`${contador}: Nombre: ${tipoAtaque.getMovName()}, ataque: ${tipoAtaque.getDamage()}.`);
-                contador++;
-            });
-        
-            let numero: string;
-            let numeroValido: number | undefined = undefined;
-        
-            while (numeroValido === undefined) {
-                numero = readlineSync.question("Escoge tipo de ataque (numero): ");
-                const numParsed = parseInt(numero);
+    private escogerMovimientoAleatorio() : Move { //Metodo pensado para la IA
+        let indiceAleatorio = Math.floor(Math.random() * this.lMovimientos.length);
+        console.log("La IA ha escogido el movimiento: " + this.lMovimientos[indiceAleatorio].getMovName());
+        return this.lMovimientos[indiceAleatorio];
+    }
 
-                if (!isNaN(numParsed) && numParsed >= 1 && numParsed <= this.lMovimientos.length) {
-                    numeroValido = numParsed; 
-                } else {
-                    console.log("Introduce una respuesta valida.");
-                }
+    private preguntarMovimiento(): Move { //Metodo pensado para el que ejecuta el programa.
+        let contador: number = 1;
+        console.log("Ataques disponibles:");
+        this.lMovimientos.forEach(tipoAtaque => {
+            console.log(`${contador}: Nombre: ${tipoAtaque.getMovName()}, ataque: ${tipoAtaque.getDamage()}.`);
+            contador++;
+        });
+    
+        let numero: string;
+        let numeroValido: number | undefined = undefined;
+        console.log();
+
+        while (numeroValido === undefined) {
+            numero = readlineSync.question("Escoge tipo de ataque (numero): ");
+            const numParsed = parseInt(numero);
+
+            if (!isNaN(numParsed) && numParsed >= 1 && numParsed <= this.lMovimientos.length) {
+                numeroValido = numParsed; 
+            } else {
+                console.log("Introduce una respuesta valida.");
             }
-        
-            const ataqueSeleccionado = this.lMovimientos[numeroValido - 1];
-            console.log(`Has seleccionado: ${ataqueSeleccionado.getMovName()} con un ataque de ${ataqueSeleccionado.getDamage()}.`);
-            return ataqueSeleccionado;
         }
+    
+        const ataqueSeleccionado = this.lMovimientos[numeroValido - 1];
+        console.log(`Has seleccionado ${ataqueSeleccionado.getMovName()} con un ataque de ${ataqueSeleccionado.getDamage()}.`);
+        return ataqueSeleccionado;
+    }
         
 
 }
