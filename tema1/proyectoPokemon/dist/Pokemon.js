@@ -91,12 +91,12 @@ class Pokemon {
                 console.log();
             }
             else { //Si no es mi turno:
-                console.log("La IA esta atacando realizando ataque...");
+                console.log("La IA esta realizando ataque...");
                 console.log();
                 movimiento = this.escogerMovimientoAleatorio();
                 damage = (this.getAtaque() / victima.getDefensa()) * movimiento.getDamage() * (1 - factorAleatorio);
                 victima.setHpActual(victima.getHpActual() - damage);
-                if (victima.getHpActual() < 0) {
+                if (victima.getHpActual() <= 0) {
                     victima.setHpActual(0);
                 }
                 console.log(`${this.getNombre()} ha infligido un daño de ${damage}HP a ${victima.getNombre()}.`);
@@ -113,7 +113,7 @@ class Pokemon {
         let contador = 1;
         console.log("Ataques disponibles:");
         this.lMovimientos.forEach(tipoAtaque => {
-            console.log(`${contador}: Nombre: ${tipoAtaque.getMovName()}, ataque: ${tipoAtaque.getDamage()}.`);
+            console.log(`${contador}: ${tipoAtaque.getMovName()}, ataque: ${tipoAtaque.getDamage()}.`);
             contador++;
         });
         let numero;

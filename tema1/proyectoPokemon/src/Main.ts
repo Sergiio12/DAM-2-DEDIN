@@ -37,7 +37,7 @@ function generarPokemons() : Pokemon[] {
     const mov5 = new Move("Maremoto Explosivo", 100);
     const mov6 = new Move("Rayo Acuático", 95);
     const mov7 = new Move("Burbuja Tormentosa", 80);
-    const mov8 = new Move("Escudo de Agua", 0); // Movimiento defensivo
+    const mov8 = new Move("Escudo de Agua", 50);
 
     movimientos = [mov5, mov6, mov7, mov8];
 
@@ -86,7 +86,7 @@ function generarPokemons() : Pokemon[] {
     //Pokemon:
     const charmander = new Pokemon("Charmander", 100, 80, 60);
     charmander.setMovimientos(movimientos);
-    lPokemons.push(charizard);
+    lPokemons.push(charmander);
 
 
     return lPokemons;
@@ -136,6 +136,7 @@ function generarRivalAleatorio(lPokemons: Pokemon[]) : Pokemon {
     let indexAleatorio : number;
     let pokemonRival : Pokemon;
     console.log("Generando rival...");
+    console.log();
     indexAleatorio =  Math.floor(Math.random() * lPokemons.length);
     pokemonRival = lPokemons[indexAleatorio];
     console.log("Tu rival es: " + pokemonRival.getNombre() + ".");
@@ -198,7 +199,10 @@ function realizarAccion(accion : number, ejecutor : Pokemon, victima : Pokemon, 
             break;
         case 2: //Curarse.
             ejecutor.setHpActual((ejecutor.getHpActual()) + (ejecutor.getHpMax() / 2));
-            console.log("Tu vida se ha restablecido a: " + ejecutor.getHpActual() + "HP.");
+            if(ejecutor.getHpActual() > ejecutor.getHpMax()) {
+                ejecutor.setHpActual(ejecutor.getHpMax());
+            }
+            console.log(ejecutor.getNombre() + ": Tu vida se ha restablecido a: " + ejecutor.getHpActual() + "HP.");
             console.log();
     }
 }
@@ -209,17 +213,18 @@ function iniciarCombate(miPokemon : Pokemon, pokemonRival : Pokemon) {
     let miPokemonYaCurado : boolean = false;
     let rivalYaCurado : boolean = false;
     while(miPokemon.getHpActual() > 0 && pokemonRival.getHpActual() > 0) {
+
         //MI TURNO
         miTurno = true;
         console.log("-----------------------------");
         console.log("TU TURNO " + "(" + miPokemon.getNombre() + "):");
         console.log("-----------------------------");
-        accion = preguntarAccion();
-        if(accion === 2 && miPokemon.getHpActual() === miPokemon.getHpMax()) {
+        if(miPokemon.getHpActual() === miPokemon.getHpMax()) {
+            console.log();
             console.log("No puedes curarte ahora porque tienes la vida a tope. Se te ha forzado a atacar.");
             realizarAccion(1, miPokemon, pokemonRival, miTurno);
-            miPokemonYaCurado = false;
         } else {
+            accion = preguntarAccion();
             if(miPokemonYaCurado) {
                 console.log("Se te ha obligado a atacar porque ya te has curado antes.");
                 realizarAccion(1, miPokemon, pokemonRival, miTurno);
@@ -229,26 +234,29 @@ function iniciarCombate(miPokemon : Pokemon, pokemonRival : Pokemon) {
             }
         }
 
-        //TURNO DE LA IA
-        miTurno = false;
-        console.log("-----------------------------");
-        console.log("TURNO DE LA IA (" + pokemonRival.getNombre() + "):");
-        console.log("-----------------------------");
-        console.log();
-        if(pokemonRival.getHpActual() === pokemonRival.getHpMax()) {
-            realizarAccion(1, pokemonRival, miPokemon, miTurno) //Forzamos a que solo pueda atacar, porque si tiene la vida llena, no podra curarse.
-        } else {   
-            if(rivalYaCurado) {
-                console.log("La IA ha sido forzada a atacar porque ya se curado con anterioridad.");
-                realizarAccion(1, pokemonRival, miPokemon, miTurno);
-            } else {
-                accion = Math.floor(Math.random() * 2) + 1;
-                realizarAccion(accion, pokemonRival, miPokemon, miTurno);
-                rivalYaCurado = true;
+        if(pokemonRival.getHpActual() > 0) {
+            //TURNO DE LA IA
+            miTurno = false;
+            console.log("-----------------------------");
+            console.log("TURNO DE LA IA (" + pokemonRival.getNombre() + "):");
+            console.log("-----------------------------");
+            console.log();
+            if(pokemonRival.getHpActual() === pokemonRival.getHpMax()) {
+                realizarAccion(1, pokemonRival, miPokemon, miTurno) //Forzamos a que solo pueda atacar, porque si tiene la vida llena, no podra curarse.
+            } else {   
+                if(rivalYaCurado) {
+                    console.log("La IA ha sido forzada a atacar porque ya se curado con anterioridad.");
+                    realizarAccion(1, pokemonRival, miPokemon, miTurno);
+                } else {
+                    accion = Math.floor(Math.random() * 2) + 1;
+                    realizarAccion(accion, pokemonRival, miPokemon, miTurno);
+                    rivalYaCurado = true;
+                }
             }
-        }
+        } /*else {
+            console.log(pokemonRival.getNombre() + " ha sido fulminado.");
+        }*/
     }
-    console.log();
     console.log("El combate ha finalizado.");
     if(miPokemon.getHpActual() === 0) {
         console.log("Ganador: " + pokemonRival.getNombre() + "(IA).");
