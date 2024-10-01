@@ -1,0 +1,14 @@
+<div class="todo-list">
+    <!--Formulario nuevas tareas:-->
+    <input type="text" [(ngModel)]="nuevoTituloTarea" placeholder="Nueva tarea" />
+    <button (click)="implementarTarea()">Añadir tarea</button>
+    <!--Lista de tareas:-->
+    <ul>
+        @for (task of tareas; track task.titulo) {
+            <input type="checkbox" [(ngModel)]="task.completada" />
+            {{ task.titulo }}
+        } @empty {
+            <li>There are no items.</li>
+        }
+    </ul>
+</div>
