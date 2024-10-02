@@ -1,0 +1,20 @@
+<div class="registroCanciones">
+    <h2>Lista de reproducción de Música</h2>
+    
+    <!-- Formulario nuevas canciones: -->
+    <input id="formulario" type="text" [(ngModel)]="nuevoTituloCancion" placeholder="Nueva canción" />
+    <button id="botonRegistrar" (click)="implementarCancion()">Añadir canción</button>
+    
+    <!-- Lista de canciones: -->
+    <ul>
+        @for (canciones of canciones; track canciones.titulo) {
+            <li class="cancion-item">
+                <input type="checkbox" [(ngModel)]="canciones.reproducida" />
+                {{ canciones.titulo }} - {{ canciones.reproducida ? 'Reproducida' : 'No reproducida' }}
+            </li>
+        } 
+        @empty {
+            <li>No hay canciones registradas.</li>
+        }
+    </ul>
+</div>

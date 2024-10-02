@@ -1,0 +1,46 @@
+.registroCanciones {
+    background-color: #f0f8ff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+#formulario {
+    width: 80%; /* Se ha reducido el tamaño del input */
+    padding: 10px;
+    font-size: 1.1em;
+    border: 2px solid #868080;
+    margin-bottom: 20px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#botonRegistrar {
+    background-color: #1e58ce;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 1.1em;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.registroCanciones ul {
+    list-style-type: none; /* Elimina el punto predeterminado de las listas */
+    padding: 0;
+    text-align: left; /* Alinea los elementos de la lista a la izquierda */
+}
+
+.cancion-item {
+    display: flex;
+    align-items: center; /* Alinea verticalmente checkbox y texto */
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc; /* Añade una línea debajo de cada canción */
+}
+
+.cancion-item input[type="checkbox"] {
+    margin-right: 10px; /* Espacio entre checkbox y texto */
+}
