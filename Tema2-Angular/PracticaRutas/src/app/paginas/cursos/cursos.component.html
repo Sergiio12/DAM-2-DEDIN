@@ -1,0 +1,6 @@
+<h2>Cursos disponibles:</h2>
+
+<div *ngFor="let curso of cursos">
+  <h2>{{ curso.nombre }} (Id: {{curso.id}})</h2>
+  <p>{{ curso.descripcion }}</p>
+</div>

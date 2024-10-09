@@ -1,0 +1,10 @@
+<h1>Detalles del Curso</h1>
+
+<div *ngIf="curso; else noCurso">
+  <h2>{{ curso.nombre }}</h2>
+  <p>{{ curso.descripcion }}</p>
+</div>
+
+<ng-template #noCurso>
+  <p>No se encontró ningún curso con este ID.</p>
+</ng-template>
