@@ -1,0 +1,18 @@
+<div *ngIf="usuarios.length > 0; else noUsuarios">
+  <div *ngFor="let usuario of usuarios">
+    <h2>Perfil de {{ usuario.nombre }}</h2>
+    <p>Correo: {{ usuario.correo }}</p>
+    <h3>Cursos Inscritos:</h3>
+    <ul>
+      <li *ngFor="let curso of usuario.cursosInscritos">
+        {{ curso }}
+      </li>
+    </ul>
+    <a [routerLink]="['/inscripciones']">Inscribirse en un nuevo curso</a>
+    <hr>
+  </div>
+</div>
+
+<ng-template #noUsuarios>
+  <p>No se encontraron usuarios.</p>
+</ng-template>

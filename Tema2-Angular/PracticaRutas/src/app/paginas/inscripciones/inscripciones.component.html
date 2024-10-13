@@ -1,0 +1,28 @@
+<form [formGroup]="inscripcionForm" (ngSubmit)="onSubmit()">
+  <label for="nombre">Nombre:</label>
+  <input id="nombre" formControlName="nombre" />
+  <div *ngIf="inscripcionForm.controls['nombre'].invalid && (inscripcionForm.controls['nombre'].dirty || inscripcionForm.controls['nombre'].touched)">
+    <small>El nombre es obligatorio.</small>
+  </div>
+
+  <label for="correo">Correo:</label>
+  <input id="correo" formControlName="correo" />
+  <div *ngIf="inscripcionForm.controls['correo'].invalid && (inscripcionForm.controls['correo'].dirty || inscripcionForm.controls['correo'].touched)">
+    <small>Introduce un correo válido.</small>
+  </div>
+
+  <label for="curso">Curso:</label>
+  <input id="curso" formControlName="curso" />
+  <div *ngIf="inscripcionForm.controls['curso'].invalid && (inscripcionForm.controls['curso'].dirty || inscripcionForm.controls['curso'].touched)">
+    <small>El curso es obligatorio.</small>
+  </div>
+
+  <button type="submit">Inscribirse</button>
+</form>
+
+<h3>Usuarios Inscritos:</h3>
+<ul>
+  <li *ngFor="let usuario of usuariosInscritos">
+    {{ usuario.nombre }} - {{ usuario.correo }} - {{ usuario.curso }}
+  </li>
+</ul>

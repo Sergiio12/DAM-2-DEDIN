@@ -10,9 +10,9 @@ import { CursosService } from '../../servicios/cursos.service';
   styleUrls: ['./cursos.component.css']
 })
 export class CursosComponent {
-  cursos: any[]; // Cambia la inicialización a undefined
+  cursos: any[];
 
   constructor(private cursosService: CursosService) {
-    this.cursos = this.cursosService.getCursos(); // Obtiene los cursos del servicio
+    this.cursos = this.cursosService.getCursos();
   }
 }
