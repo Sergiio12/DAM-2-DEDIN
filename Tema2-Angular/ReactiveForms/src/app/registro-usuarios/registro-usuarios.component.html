@@ -1,0 +1,11 @@
+<div *ngIf="users.length > 0">
+  <h3>Datos de Usuarios Registrados</h3>
+  <ul>
+    <li *ngFor="let user of users">
+      <p><strong>Nombre:</strong> {{ user.name }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Contraseña:</strong> {{ user.password }}</p>
+      <hr>
+    </li>
+  </ul>
+</div>
