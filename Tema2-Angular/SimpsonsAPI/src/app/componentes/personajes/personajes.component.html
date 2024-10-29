@@ -1,0 +1,15 @@
+<h2>Programas de TV:</h2>
+<div class="character-container">
+    <div *ngFor="let programa of personaje" class="character-card">
+        <div class="character-image">
+            <img [src]="programa.image" alt="{{ programa.title }}"/>
+        </div>
+        <div class="character-info">
+            <h3>{{ programa.title }} ({{ programa.year }})</h3>
+            <p>Géneros: {{ programa.genre.join(', ') }}</p>
+            <p>Duración: {{ programa.runtime_in_minutes }} minutos</p>
+            <p>Calificación: {{ programa.rating }}</p>
+            <p>Episodios: {{ programa.episodes }}</p>
+        </div>
+    </div>
+</div>
