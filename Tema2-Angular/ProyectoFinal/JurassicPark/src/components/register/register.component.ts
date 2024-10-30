@@ -37,7 +37,6 @@ export class RegisterComponent {
             setTimeout(() => this.router.navigate(['/login']), 2000);
           },
           (error) => {
-            // Maneja el error aquí
             this.errorMessage = error.error.message || 'Error en el registro. Inténtalo de nuevo.';
           }
         );
