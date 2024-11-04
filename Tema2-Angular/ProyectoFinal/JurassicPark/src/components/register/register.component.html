@@ -22,6 +22,9 @@
         <div *ngIf="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched" class="error">
           Debe confirmar la contraseña.
         </div>
+        <div *ngIf="errorMessage && (form.get('confirmPassword')?.touched || form.get('password')?.touched)" class="error">
+          {{ errorMessage }}
+        </div>
       </div>
       <button type="submit" [disabled]="form.invalid" class="btn-submit">Registrar</button>
       <p *ngIf="registroExitoso" class="success-message">¡Registro exitoso! Redirigiendo al login...</p>

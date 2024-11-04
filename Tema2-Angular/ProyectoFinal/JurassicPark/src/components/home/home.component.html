@@ -3,14 +3,17 @@
 
   <div class="status">
     <h2>Estado del Parque</h2>
-    <p>Monedas: {{ coins }}</p>
-    <p>Clicks Realizados: {{ clickCount }}</p>
-    <p>Próxima mejora en: {{ clicksToNextUnlock }} clicks</p>
+    <p>Monedas: <span class="status-value">{{ coins }}</span></p>
+    <p>Clicks Realizados: <span class="status-value">{{ clickCount }}</span></p>
+    <p>Próxima mejora en: <span class="status-value">{{ clicksToNextUnlock }} clicks</span></p>
   </div>
 
   <div class="clicker">
-    <button class="click-button" (click)="handleClick()">¡Haz Click!</button>
-    <p>{{ message }}</p>
+    <button class="click-button" (click)="handleClick()" [disabled]="gameCompleted">¡Haz Click!</button>
+    <div class="message-box">
+      <p class="message">{{ message }}</p>
+      <p *ngIf="gameCompleted" class="completion-message">¡¡¡¡¡¡¡ENHORABUENA!!!!!! TE HAS PASADO EL JUEGO</p>
+    </div>
   </div>
 
   <div class="dinosaur-list">
@@ -20,8 +23,11 @@
         <img [src]="'http://localhost:3000/' + dinosaur.image" alt="{{ dinosaur.name }}" class="dinosaur-image">
         <h3>{{ dinosaur.name }}</h3>
         <p><em>{{ dinosaur.scientificName }}</em></p>
-        <p>Costo: {{ dinosaur.cost }} monedas</p>
-        <button (click)="buyDinosaur(dinosaur)" [ngClass]="{'btn-disabled': coins < dinosaur.cost, 'btn-enabled': coins >= dinosaur.cost}">
+        <p>Costo: <span class="cost">{{ dinosaur.cost }} monedas</span></p>
+        <p *ngIf="dinosaur.comprado" class="comprado-message">¡Comprado!</p>
+        <button (click)="buyDinosaur(dinosaur)" 
+                [disabled]="dinosaur.comprado || gameCompleted || recintosComprados.length === 0 || coins < dinosaur.cost"
+                [ngClass]="{'btn-disabled': dinosaur.comprado || gameCompleted || coins < dinosaur.cost, 'btn-enabled': coins >= dinosaur.cost && !dinosaur.comprado}">
           Comprar
         </button>
       </div>
@@ -33,8 +39,11 @@
     <div class="enclosure-grid">
       <div *ngFor="let enclosure of enclosures" class="enclosure-card">
         <h3>{{ enclosure.name }}</h3>
-        <p>Costo: {{ enclosure.cost }} monedas</p>
-        <button (click)="buyEnclosure(enclosure)" [ngClass]="{'btn-disabled': coins < enclosure.cost, 'btn-enabled': coins >= enclosure.cost}">
+        <p>Costo: <span class="cost">{{ enclosure.cost }} monedas</span></p>
+        <p *ngIf="enclosure.comprado" class="comprado-message">¡Comprado!</p>
+        <button (click)="buyEnclosure(enclosure)" 
+                [disabled]="enclosure.comprado || gameCompleted || coins < enclosure.cost"
+                [ngClass]="{'btn-disabled': enclosure.comprado || gameCompleted || coins < enclosure.cost, 'btn-enabled': coins >= enclosure.cost}">
           Comprar
         </button>
       </div>

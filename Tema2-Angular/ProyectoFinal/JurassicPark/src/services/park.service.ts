@@ -23,10 +23,14 @@ export class ParkService {
 
   updatePark(data: any): Observable<any> {
     const token = localStorage.getItem('authToken');
+    if (!token) {
+      console.error('Error: No hay token de autenticación');
+    }
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
     return this.http.put(`http://localhost:3000/park/update`, data, { headers });
   }
+  
 
 }

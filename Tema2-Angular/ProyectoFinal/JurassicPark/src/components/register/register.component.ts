@@ -29,8 +29,16 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    if (this.form.valid && this.form.get('password')?.value === this.form.get('confirmPassword')?.value) {
-      this.userService.registerUser(this.form.get('email')?.value, this.form.get('password')?.value)
+    const password = this.form.get('password')?.value;
+    const confirmPassword = this.form.get('confirmPassword')?.value;
+
+    if (this.form.valid) {
+      if (password !== confirmPassword) {
+        this.errorMessage = 'Las contraseñas no coinciden.';
+        return;
+      }
+
+      this.userService.registerUser(this.form.get('email')?.value, password)
         .subscribe(
           () => {
             this.registroExitoso = true;
@@ -41,7 +49,7 @@ export class RegisterComponent {
           }
         );
     } else {
-      this.errorMessage = 'Las contraseñas no coinciden o el formulario es inválido.';
+      this.errorMessage = 'El formulario es inválido. Asegúrate de que todos los campos sean correctos.';
     }
   }
 }
