@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EnclousuresService {
-  private apiUrl = "https://localhost:3000/enclousures";
+  private apiUrl = "http://localhost:3000/enclosures";
 
   constructor(private http: HttpClient) {}
 
-  getDinosaurs(): Observable<any> {
+  getEnclousures(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
 }

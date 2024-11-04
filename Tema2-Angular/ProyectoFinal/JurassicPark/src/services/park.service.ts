@@ -20,4 +20,13 @@ export class ParkService {
 
     return this.http.get('http://localhost:3000/park/status', headers);
   }
+
+  updatePark(data: any): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.put(`http://localhost:3000/park/update`, data, { headers });
+  }
+
 }

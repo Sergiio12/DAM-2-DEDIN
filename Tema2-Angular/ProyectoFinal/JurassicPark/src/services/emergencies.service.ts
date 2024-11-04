@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EmergenciesService {
-  private apiUrl = "https://localhost:3000/emergencies";
+  private apiUrl = "http://localhost:3000/emergencies";
 
   constructor(private http: HttpClient) {}
 
-  getDinosaurs(): Observable<any> {
+  getEmergencies(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
 }
